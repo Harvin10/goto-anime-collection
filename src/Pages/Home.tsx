@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client';
 import { LOAD_ANIME_LIST } from '../GraphQL/Queries';
 import { css } from '@emotion/react';
 import AnimeCard from '../Components/AnimeCard';
+import Pagination from '../Components/Pagination';
 
 function Home() {
   const homeCss = {
@@ -18,15 +19,20 @@ function Home() {
       flex-direction: column;
       gap: 8px;
     `,
+    pagination: css`
+      display: flex;
+      justify-content: end;
+      margin-top: 16px;
+    `,
   }
 
-  const [animeList, setAnimeList] = useState(new Array(10).fill(''))
-  const [paginationInfo, setPaginationInfo] = useState({})
-  const [nextPage, setNextPage] = useState(1)
+  const [animeList, setAnimeList] = useState(new Array(5).fill(''))
+  const [paginationInfo, setPaginationInfo] = useState(0)
+  const [currPage, setCurrPage] = useState(1)
 
-  const { error, loading, data } = useQuery(LOAD_ANIME_LIST, {
+  const { loading, data, refetch } = useQuery(LOAD_ANIME_LIST, {
     variables: {
-      page: nextPage
+      page: currPage
     }
   });
 
@@ -38,10 +44,13 @@ function Home() {
     }
   }, [data])
 
+  useEffect(() => {
+    refetch({ page: currPage })
+  }, [currPage])
+
   const renderAnimeList = () => {
     return animeList.map((anime, idx) => {
       const {
-        id,
         coverImage,
         episodes,
         duration,
@@ -72,6 +81,15 @@ function Home() {
       <div css={homeCss.animeListWrapper}>
         {renderAnimeList()}
       </div>
+      {!loading ?
+        <div css={homeCss.pagination}>
+          <Pagination
+            currentPage={currPage}
+            lastPage={paginationInfo}
+            onChangePage={setCurrPage}
+          />
+        </div>
+        : null}
     </div>
   );
 }

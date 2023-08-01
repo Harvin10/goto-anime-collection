@@ -96,7 +96,9 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
   const formatDuration = (duration: number) => {
     const hour = Math.floor(duration / 60)
     const minute = duration % 60
-    return `${hour}hr ${minute}m`
+    let time = ''
+    if (hour) time = `${hour}hr`
+    return time + `${minute}m`
   }
 
   const renderEpisodesOrDuration = () => {
