@@ -10,6 +10,7 @@ import { onError } from '@apollo/client/link/error';
 import emotionReset from 'emotion-reset';
 import { Global, css } from '@emotion/react';
 import Home from './Pages/Home';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 
 const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) {
@@ -31,7 +32,7 @@ const client = new ApolloClient({
 
 function App() {
   return (
-    <>
+    <HashRouter>
       <Global styles={css`
         ${emotionReset}
         @font-face {
@@ -40,13 +41,20 @@ function App() {
         }
         html {
           font-family: 'Poppins', sans-serif;
+
+          a {
+            text-decoration: none;
+            color: black;
+          }
         }
       `} />
       <ApolloProvider client={client}>
-
-        <Home />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/detail/:id'></Route>
+        </Routes>
       </ApolloProvider>
-    </>
+    </HashRouter>
   );
 }
 

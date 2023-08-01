@@ -10,6 +10,7 @@ interface AnimeCardProps {
 }
 
 interface AnimeData {
+  id: number;
   episodes: number;
   duration: number;
   format: string;
