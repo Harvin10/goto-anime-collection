@@ -1,25 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {
+  ApolloClient,
+  ApolloProvider,
+  HttpLink,
+  InMemoryCache,
+  from,
+} from "@apollo/client";
+import { onError } from '@apollo/client/link/error';
+import emotionReset from 'emotion-reset';
+import { Global, css } from '@emotion/react';
+import Home from './Pages/Home';
+
+const errorLink = onError(({ graphQLErrors }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message }) => {
+      alert(`graphql error ${message}`)
+    })
+  }
+});
+
+const link = from([
+  errorLink,
+  new HttpLink({ uri: process.env.REACT_APP_ANILIST_API_URL })
+]);
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: link
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Global styles={css`${emotionReset}`} />
+      <ApolloProvider client={client}>
+        <Home />
+      </ApolloProvider>
+    </>
   );
 }
 
