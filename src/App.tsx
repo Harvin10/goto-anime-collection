@@ -32,8 +32,18 @@ const client = new ApolloClient({
 function App() {
   return (
     <>
-      <Global styles={css`${emotionReset}`} />
+      <Global styles={css`
+        ${emotionReset}
+        @font-face {
+          font-family: 'Poppins';
+          src: url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+        }
+        html {
+          font-family: 'Poppins', sans-serif;
+        }
+      `} />
       <ApolloProvider client={client}>
+
         <Home />
       </ApolloProvider>
     </>

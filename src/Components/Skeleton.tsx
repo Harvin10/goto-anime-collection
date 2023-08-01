@@ -6,6 +6,7 @@ import { css, keyframes } from '@emotion/react';
 interface SkeletonProps {
   h: string;
   w: string;
+  rounded?: boolean | string;
 }
 
 function Skeleton(props: SkeletonProps) {
@@ -15,6 +16,15 @@ function Skeleton(props: SkeletonProps) {
     }
   `;
 
+  const roundedLogic = () => {
+    if (props.rounded) {
+      if (typeof props.rounded === 'string') {
+        return props.rounded
+      }
+      return '4px'
+    }
+  };
+
   const skeletonCss = css`
     display: inline-block;
     height: ${props.h};
@@ -22,6 +32,7 @@ function Skeleton(props: SkeletonProps) {
     position: relative;
     overflow: hidden;
     background-color: #DDDBDD;
+    border-radius: ${roundedLogic()};
     &::after {
       position: absolute;
       top: 0;
