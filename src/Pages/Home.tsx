@@ -64,9 +64,8 @@ function Home() {
       const routes = 'detail/' + id
 
       return (
-        <Link to={routes}>
+        <Link key={idx} to={routes}>
           <AnimeCard
-            key={idx}
             data={{
               id,
               episodes,

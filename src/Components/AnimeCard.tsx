@@ -36,6 +36,7 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
     image: css`
       height: 130px;
       min-width: 90px;
+      max-width: 90px;
       object-fit: cover;
       overflow: hidden;
     `,
@@ -103,7 +104,7 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
   }
 
   const renderEpisodesOrDuration = () => {
-    if (data.episodes === 1) {
+    if (!data.episodes || data.episodes === 1) {
       return <p css={animeCardCss.episode}>{formatDuration(data.duration)}</p>
     } else {
       return <p css={animeCardCss.episode}>{data.episodes} eps</p>
@@ -111,14 +112,17 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
   }
 
   const renderGenres = () => {
-    const genreList = data.genres.map((genre, idx) =>
-      <p
-        key={idx}
-        css={animeCardCss.genre}
-      >
-        {genre}
-      </p>
-    )
+    const genreList = data.genres.map((genre, idx) => {
+      if (idx < 4) {
+        return <p
+          key={idx}
+          css={animeCardCss.genre}
+        >
+          {idx === 3 ? '...' : genre}
+        </p>
+      }
+      return;
+    })
 
     return (
       <div css={animeCardCss.genres}>
@@ -134,9 +138,9 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
         <div css={animeCardCss.infoWrapper}>
           <div>
             <div css={animeCardCss.titleRomaji}>
-              <Skeleton w="200px" h="24px" rounded />
+              <Skeleton w="175px" h="24px" rounded />
             </div>
-            <Skeleton w="150px" h="12px" rounded />
+            <Skeleton w="120px" h="12px" rounded />
           </div>
           <div>
             <div css={animeCardCss.typesWrapper}>
@@ -151,7 +155,7 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
   }
 
   const renderGenresSkeleton = () => {
-    const genreSkeletonList = new Array(5).fill('').map((_, idx) => {
+    const genreSkeletonList = new Array(3).fill('').map((_, idx) => {
       return (
         <Skeleton key={idx} w="50px" h="14px" rounded="14px" />
       )

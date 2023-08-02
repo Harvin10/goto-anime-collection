@@ -27,8 +27,8 @@ function Skeleton(props: SkeletonProps) {
 
   const skeletonCss = css`
     display: inline-block;
-    height: ${props.h};
-    width: ${props.w};
+    min-height: ${props.h};
+    min-width: ${props.w};
     position: relative;
     overflow: hidden;
     background-color: #DDDBDD;

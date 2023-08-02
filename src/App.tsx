@@ -1,4 +1,5 @@
 import React from 'react';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import {
   ApolloClient,
   ApolloProvider,
@@ -10,7 +11,7 @@ import { onError } from '@apollo/client/link/error';
 import emotionReset from 'emotion-reset';
 import { Global, css } from '@emotion/react';
 import Home from './Pages/Home';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import Detail from './Pages/Detail';
 
 const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) {
@@ -51,7 +52,7 @@ function App() {
       <ApolloProvider client={client}>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/detail/:id'></Route>
+          <Route path='/detail/:id' element={<Detail />} />
         </Routes>
       </ApolloProvider>
     </HashRouter>

@@ -22,4 +22,26 @@ export const LOAD_ANIME_LIST = gql`
       }
     }
   }
-`
+`;
+
+export const LOAD_ANIME_DETAIL = gql`
+  query ($id: Int) {
+    Media(type: ANIME, id: $id) {
+      id
+      title {
+        romaji
+        native
+      }
+      episodes
+      duration
+      genres
+      format
+      coverImage {
+        color
+        medium
+        large
+      }
+      bannerImage
+    }
+  }
+`;
