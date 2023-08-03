@@ -5,7 +5,7 @@ import { useQuery } from '@apollo/client';
 import { LOAD_ANIME_LIST } from '../GraphQL/Queries';
 import { css } from '@emotion/react';
 import AnimeCard from '../Components/AnimeCard';
-import Pagination from '../Components/Pagination';
+import Pagination from '../Components/common/Pagination';
 import { Link } from 'react-router-dom';
 
 function Home() {

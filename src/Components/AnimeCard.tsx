@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { css } from '@emotion/react';
-import Skeleton from './Skeleton';
+import Skeleton from './common/Skeleton';
 
 interface AnimeCardProps {
   data: AnimeData;

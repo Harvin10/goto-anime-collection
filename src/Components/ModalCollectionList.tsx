@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import ModalOverlay from '../Components/ModalOverlay';
+import ModalOverlay from './common/ModalOverlay';
 
 interface ModalCollectionListProps {
   isShowModal: boolean;
