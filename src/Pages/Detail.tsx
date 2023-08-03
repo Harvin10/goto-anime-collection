@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { LOAD_ANIME_DETAIL } from '../GraphQL/Queries';
 import { css } from '@emotion/react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
+import ModalCollectionList from '../Components/ModalCollectionList';
 
 function Detail() {
   const [animeData, setAnimeData] = useState({
@@ -23,6 +24,7 @@ function Detail() {
     },
     bannerImage: ''
   })
+  const [isShowCollectionModal, setShowCollectionModal] = useState(false)
 
   const detailCss = {
     wrapper: css`
@@ -125,8 +127,6 @@ function Detail() {
     }
   }, [data])
 
-
-
   const formatDuration = (duration: number) => {
     const hour = Math.floor(duration / 60)
     const minute = duration % 60
@@ -160,54 +160,67 @@ function Detail() {
     )
   }
 
+  if (loading) {
+    return;
+  }
+
   return (
-    <div css={detailCss.wrapper}>
-      <div css={detailCss.headerWrapper}>
-        {animeData.bannerImage
-          ? <img
-            css={detailCss.bannerImage}
-            src={animeData.bannerImage}
-            alt={animeData.title.romaji + 'banner'}
-          />
-          : <div
-            css={detailCss.bannerColor(animeData.coverImage.color)}
-          />
-        }
-        <div css={detailCss.actionWrapper}>
-          <button>Add to Collection</button>
-        </div>
-        <div css={detailCss.cover}>
-          <div css={detailCss.coverBorder}>
-            <img
-              css={detailCss.coverImage}
-              src={animeData.coverImage.medium}
-              alt={animeData.title.romaji + 'cover'}
+    <>
+      <div css={detailCss.wrapper}>
+        <div css={detailCss.headerWrapper}>
+          {animeData.bannerImage
+            ? <img
+              css={detailCss.bannerImage}
+              src={animeData.bannerImage}
+              alt={animeData.title.romaji + 'banner'}
             />
+            : <div
+              css={detailCss.bannerColor(animeData.coverImage.color)}
+            />
+          }
+          <div css={detailCss.actionWrapper}>
+            <button onClick={() => setShowCollectionModal(true)}>
+              Add to Collection
+            </button>
           </div>
-        </div>
-      </div>
-      <div css={detailCss.bodyWrapper}>
-        <div>
-          <div>
-            <p css={detailCss.titleRomaji}>
-              {animeData.title.romaji}
-            </p>
-            <p css={detailCss.titleNative}>
-              {animeData.title.native}
-            </p>
-          </div>
-          <div css={detailCss.infoWrapper}>
-            <div css={detailCss.typesWrapper}>
-              <p css={detailCss.format}>
-                {animeData.format}
-              </p>
-              {renderEpisodesOrDuration()}
+          <div css={detailCss.cover}>
+            <div css={detailCss.coverBorder}>
+              <img
+                css={detailCss.coverImage}
+                src={animeData.coverImage.medium}
+                alt={animeData.title.romaji + 'cover'}
+              />
             </div>
-            {renderGenres()}
+          </div>
+        </div>
+        <div css={detailCss.bodyWrapper}>
+          <div>
+            <div>
+              <p css={detailCss.titleRomaji}>
+                {animeData.title.romaji}
+              </p>
+              <p css={detailCss.titleNative}>
+                {animeData.title.native}
+              </p>
+            </div>
+            <div css={detailCss.infoWrapper}>
+              <div css={detailCss.typesWrapper}>
+                <p css={detailCss.format}>
+                  {animeData.format}
+                </p>
+                {renderEpisodesOrDuration()}
+              </div>
+              {renderGenres()}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+      <ModalCollectionList
+        isShowModal={isShowCollectionModal}
+        animeId={paramId || ''}
+        onCloseModal={() => setShowCollectionModal(false)}
+      />
+    </>
   );
 }
 

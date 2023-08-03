@@ -46,8 +46,10 @@ function Home() {
   }, [data])
 
   useEffect(() => {
-    refetch({ page: currPage })
-  }, [currPage])
+    if (currPage) {
+      refetch({ page: currPage })
+    }
+  }, [currPage, refetch])
 
   const renderAnimeList = () => {
     return animeList.map((anime, idx) => {

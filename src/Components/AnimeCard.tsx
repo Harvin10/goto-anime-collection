@@ -121,7 +121,7 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
           {idx === 3 ? '...' : genre}
         </p>
       }
-      return;
+      return <></>;
     })
 
     return (
