@@ -12,6 +12,9 @@ import emotionReset from 'emotion-reset';
 import { Global, css } from '@emotion/react';
 import Home from './Pages/Home';
 import Detail from './Pages/Detail';
+import Collection from './Pages/Collection';
+import CollectionDetail from './Pages/CollectionDetail';
+import Navigation from './Components/common/Navigation';
 
 const errorLink = onError(({ graphQLErrors }) => {
   if (graphQLErrors) {
@@ -50,9 +53,12 @@ function App() {
         }
       `} />
       <ApolloProvider client={client}>
+        <Navigation />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/detail/:id' element={<Detail />} />
+          <Route path='/collection' element={<Collection />} />
+          <Route path='/collection/detail/:id' element={<CollectionDetail />} />
         </Routes>
       </ApolloProvider>
     </HashRouter>

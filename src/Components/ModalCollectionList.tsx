@@ -129,7 +129,6 @@ function ModalCollectionList({ isShowModal, animeId, onCloseModal }: ModalCollec
       onCloseModal={onCloseModal}
     >
       <div css={modalContentCss.wrapper}>
-        {JSON.stringify(selectedCollection)}
         {renderCollectionList()}
         <div css={modalContentCss.addNewWrapper}>
           <input
@@ -156,76 +155,4 @@ function ModalCollectionList({ isShowModal, animeId, onCloseModal }: ModalCollec
   )
 }
 
-export default ModalCollectionList
-
-
-
-// const [collectionData, setCollectionData]: [collectionTypes, React.Dispatch<React.SetStateAction<{}>>] = useState({})
-// const [isCollectionsUpdated, setCollectionsUpdated] = useState(false)
-// const [newCollection, setNewCollection] = useState('')
-// const [selectedCollection, setSelectedCollection] = useState([''])
-
-// const [animeData, setAnimeData] = useState([])
-
-// useEffect(() => {
-//   setCollectionData(getCollectionData())
-//   setAnimeData(getAnimeData())
-
-//   setSelectedCollection([])
-//   setCollectionsUpdated(false)
-// }, [isCollectionsUpdated])
-
-// const getCollectionData = () => {
-//   return JSON.parse(localStorage.getItem('collections') || "{}")
-// }
-
-// const getAnimeData = () => {
-//   return JSON.parse(localStorage.getItem('animes') || "{}")[paramId]
-// }
-
-// const addNewCollection = () => {
-//   localStorage.setItem('collections', JSON.stringify(
-//     {
-//       ...collectionData,
-//       [newCollection]: [],
-//     }
-//   ))
-//   setCollectionsUpdated(true)
-//   setNewCollection('')
-// }
-
-// const updateCollections = () => {
-//   const needUpdate: collectionTypes = {}
-//   // selectedCollection.forEach((c) => {
-//   //   const collectionDatum = collectionData?.[c]?.length > 0 ? collectionData[c] : []
-//   //   needUpdate[c] = [...new Set([...collectionDatum, paramId])]
-//   // })
-
-//   animeData.forEach((c) => {
-//     const collectionDatum = collectionData?.[c]?.length > 0 ? collectionData[c] : []
-//     needUpdate[c] = [...new Set([...collectionDatum, paramId])]
-//   })
-//   localStorage.setItem('collections', JSON.stringify({
-//     ...collectionData,
-//     ...needUpdate
-//   }))
-//   localStorage.setItem('animes', JSON.stringify({
-//     [paramId]: [...new Set(selectedCollection)]
-//   }))
-//   setNewCollection('')
-//   onCloseModal()
-// }
-
-// const onToggleChecked = (name: string) => {
-//   const newSelected = [...selectedCollection]
-//   let isChecked = true
-//   selectedCollection.forEach((c, idx) => {
-//     if (c === name) {
-//       newSelected.splice(idx, 1)
-//       isChecked = false
-//       return;
-//     }
-//   })
-//   if (isChecked) newSelected.push(name)
-//   setSelectedCollection(newSelected)
-// }
+export default ModalCollectionList;

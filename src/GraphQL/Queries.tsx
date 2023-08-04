@@ -45,3 +45,16 @@ export const LOAD_ANIME_DETAIL = gql`
     }
   }
 `;
+
+export const LOAD_ANIME_COLLECTION_LIST = gql`
+  query ($search: [Int]) {
+    Page {
+      media(type: ANIME, id_in: $search) {
+        id
+        coverImage {
+          medium
+        }
+      }
+    }
+  }
+`;
