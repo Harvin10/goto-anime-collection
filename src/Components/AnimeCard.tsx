@@ -112,16 +112,13 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
   }
 
   const renderGenres = () => {
-    const genreList = data.genres.map((genre, idx) => {
-      if (idx < 4) {
-        return <p
-          key={idx}
-          css={animeCardCss.genre}
-        >
-          {idx === 3 ? '...' : genre}
-        </p>
-      }
-      return <></>;
+    const genreList = data.genres.slice(0, 4).map((genre, idx) => {
+      return <p
+        key={idx}
+        css={animeCardCss.genre}
+      >
+        {idx === 3 ? '...' : genre}
+      </p>
     })
 
     return (
@@ -157,7 +154,12 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
   const renderGenresSkeleton = () => {
     const genreSkeletonList = new Array(3).fill('').map((_, idx) => {
       return (
-        <Skeleton key={idx} w="50px" h="14px" rounded="14px" />
+        <Skeleton
+          key={idx}
+          w="50px"
+          h="14px"
+          rounded="14px"
+        />
       )
     })
 

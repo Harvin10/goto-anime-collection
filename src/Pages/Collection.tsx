@@ -4,15 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
-import { LOAD_ANIME_COLLECTION_LIST } from '../GraphQL/Queries';
+import { LOAD_ANIME_LIST_BANNER } from '../GraphQL/Queries';
 import CollectionCard from '../Components/CollectionCard';
 
 interface localStorageType {
-  [key: string]: collectionType
+  [key: string]: collectionType;
 }
 
 interface collectionType {
-  [key: string]: boolean
+  [key: string]: boolean;
 }
 
 function Collection() {
@@ -32,10 +32,10 @@ function Collection() {
   const [lsCollectionsData, setLsCollectionsData]: [localStorageType, React.Dispatch<React.SetStateAction<{}>>] = useState({})
   const [isLsUpdated, setLsUpdated] = useState(false)
 
-  const [imageData, setImageData] = useState([{ id: 0, coverImage: { medium: '' } }])
-  const [searchImage, setSearchImage]: [number[], React.Dispatch<React.SetStateAction<number[]>>] = useState([0])
+  const [animeList, setAnimeList] = useState([{ id: 0, coverImage: { medium: '' } }])
+  const [paramSearch, setParamSearch]: [number[], React.Dispatch<React.SetStateAction<number[]>>] = useState([0])
 
-  const [getAnimeImage, { loading, data }] = useLazyQuery(LOAD_ANIME_COLLECTION_LIST);
+  const [getAnimeList, { loading, data }] = useLazyQuery(LOAD_ANIME_LIST_BANNER);
 
   useEffect(() => {
     setLsCollectionsData(JSON.parse(localStorage.getItem('collections') || "{}"))
@@ -43,22 +43,22 @@ function Collection() {
   }, [isLsUpdated])
 
   useEffect(() => {
-    if (searchImage.length > 0 && searchImage[0] !== 0) {
-      getAnimeImage({ variables: { search: searchImage } })
+    if (paramSearch.length > 0 && paramSearch[0] !== 0) {
+      getAnimeList({ variables: { search: paramSearch } })
     }
-  }, [searchImage, getAnimeImage])
+  }, [paramSearch, getAnimeList])
 
   useEffect(() => {
     const newSearch = Object.keys(lsCollectionsData).map((collection) => {
       return parseInt(Object.keys(lsCollectionsData[collection])[0])
     })
-    setSearchImage(newSearch)
+    setParamSearch(newSearch)
   }, [lsCollectionsData])
 
   useEffect(() => {
     if (data) {
       const { media } = data.Page;
-      setImageData(media)
+      setAnimeList(media)
     }
   }, [data])
 
@@ -68,7 +68,7 @@ function Collection() {
       let id = 0
       let image = ''
 
-      imageData.forEach((datum) => {
+      animeList.forEach((datum) => {
         if (datum.id === parseInt(Object.keys(lsCollectionsData[collection])[0])) {
           id = datum.id
           image = datum.coverImage.medium
@@ -83,8 +83,8 @@ function Collection() {
           <CollectionCard
             data={{
               id,
-              title: collection,
               image,
+              title: collection,
             }}
             isLoading={loading}
           />

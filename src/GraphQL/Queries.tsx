@@ -1,23 +1,23 @@
 import { gql } from '@apollo/client';
 
 export const LOAD_ANIME_LIST = gql`
-  query ($page: Int) {
+  query ($page: Int, $search: [Int]) {
     Page (page: $page, perPage: 10) {
       pageInfo {
         lastPage
       }
-      media(type: ANIME) {
+      media(type: ANIME, id_in: $search) {
         id
+        coverImage {
+          medium
+        }
+        duration
+        episodes
+        format
+        genres
         title {
           romaji
           native
-        }
-        episodes
-        duration
-        genres
-        format
-        coverImage {
-          medium
         }
       }
     }
@@ -32,21 +32,22 @@ export const LOAD_ANIME_DETAIL = gql`
         romaji
         native
       }
-      episodes
-      duration
-      genres
-      format
+      bannerImage
       coverImage {
         color
         medium
         large
       }
-      bannerImage
+      description
+      duration
+      episodes
+      format
+      genres
     }
   }
 `;
 
-export const LOAD_ANIME_COLLECTION_LIST = gql`
+export const LOAD_ANIME_LIST_BANNER = gql`
   query ($search: [Int]) {
     Page {
       media(type: ANIME, id_in: $search) {
