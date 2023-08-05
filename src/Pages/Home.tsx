@@ -6,7 +6,6 @@ import { LOAD_ANIME_LIST } from '../GraphQL/Queries';
 import { css } from '@emotion/react';
 import AnimeCard from '../Components/AnimeCard';
 import Pagination from '../Components/common/Pagination';
-import { Link } from 'react-router-dom';
 
 function Home() {
   const homeCss = {
@@ -66,20 +65,19 @@ function Home() {
       const routes = 'detail/' + id
 
       return (
-        <Link key={idx} to={routes}>
-          <AnimeCard
-            data={{
-              id,
-              episodes,
-              duration,
-              format,
-              genres: genres || [],
-              image: coverImage?.medium,
-              title: title,
-            }}
-            isLoading={loading}
-          />
-        </Link>
+        <AnimeCard
+          data={{
+            id,
+            episodes,
+            duration,
+            format,
+            genres: genres || [],
+            image: coverImage?.medium,
+            title: title,
+          }}
+          isLoading={loading}
+          routes={routes}
+        />
       )
     })
   }

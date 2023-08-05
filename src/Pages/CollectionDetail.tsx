@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
 import { useLazyQuery } from '@apollo/client';
 import { LOAD_ANIME_LIST } from '../GraphQL/Queries';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import AnimeCard from '../Components/AnimeCard';
 
 interface localStorageType {
@@ -16,7 +16,7 @@ interface collectionType {
 }
 
 function CollectionDetail() {
-  const CollectionDetailCss = {
+  const collectionDetailCss = {
     wrapper: css`
       min-height: 100vh;
       background-color: whitesmoke;
@@ -35,6 +35,8 @@ function CollectionDetail() {
   const [animeList, setAnimeList] = useState(new Array(5).fill(''))
   const [paramSearch, setParamSearch]: [number[], React.Dispatch<React.SetStateAction<number[]>>] = useState([0])
 
+  const [isEmptyState, setEmptyState] = useState(false)
+
   const [getAnimeList, { loading, data }] = useLazyQuery(LOAD_ANIME_LIST);
 
   useEffect(() => {
@@ -45,6 +47,9 @@ function CollectionDetail() {
   useEffect(() => {
     if (paramSearch.length > 0 && paramSearch[0] !== 0) {
       getAnimeList({ variables: { search: paramSearch } })
+      setEmptyState(false)
+    } else if (paramSearch[0] !== 0) {
+      setEmptyState(true)
     }
   }, [lsCollectionsData, paramSearch, getAnimeList])
 
@@ -61,8 +66,6 @@ function CollectionDetail() {
     }
   }, [data])
 
-
-
   const renderAnimeList = () => {
     return animeList.map((anime, idx) => {
       const {
@@ -78,27 +81,36 @@ function CollectionDetail() {
       const routes = '/detail/' + id
 
       return (
-        <Link key={idx} to={routes}>
-          <AnimeCard
-            data={{
-              id,
-              episodes,
-              duration,
-              format,
-              genres: genres || [],
-              image: coverImage?.medium,
-              title: title,
-            }}
-            isLoading={loading || !animeList[0]}
-          />
-        </Link>
+        <AnimeCard
+          key={idx}
+          data={{
+            id,
+            episodes,
+            duration,
+            format,
+            genres: genres || [],
+            image: coverImage?.medium,
+            title: title,
+          }}
+          isLoading={loading || !animeList[0]}
+          option={{
+            collectionId: paramId
+          }}
+          routes={routes}
+          refetchParent={() => setLsUpdated(true)}
+        />
       )
     })
   }
 
   return (
-    <div css={CollectionDetailCss.wrapper}>
-      {renderAnimeList()}
+    <div css={collectionDetailCss.wrapper}>
+      {!isEmptyState
+        ? renderAnimeList()
+        : <p>
+          No anime in this collection yet...
+        </p>
+      }
     </div>
   );
 }

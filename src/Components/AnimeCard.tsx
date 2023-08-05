@@ -1,12 +1,19 @@
 /** @jsxImportSource @emotion/react */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { css } from '@emotion/react';
 import Skeleton from './common/Skeleton';
+import ModalRemoveAnime from './ModalRemoveAnime';
+import { Link } from 'react-router-dom';
 
 interface AnimeCardProps {
   data: AnimeData;
   isLoading: Boolean;
+  option?: {
+    collectionId?: string;
+  }
+  routes: string;
+  refetchParent?: () => void;
 }
 
 interface AnimeData {
@@ -24,7 +31,7 @@ interface AnimeTitle {
   native: string;
 }
 
-function AnimeCard({ data, isLoading }: AnimeCardProps) {
+function AnimeCard({ data, isLoading, option, routes, refetchParent }: AnimeCardProps) {
   const animeCardCss = {
     wrapper: css`
       display: flex;
@@ -32,6 +39,7 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
       border-radius: 16px;
       overflow: hidden;
       background-color: white;
+      position: relative;
     `,
     image: css`
       height: 130px;
@@ -88,12 +96,62 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
       align-items: center;
       padding-right: 8px;
       padding-left: 6px;
-      border-left: .5px solid lightgray;
     `,
     arrowRight: css`
       height: 16px;
-    `
+    `,
+    optionWrapper: css`
+      display: flex;
+      justify-content: center;
+      align-items: start;
+      padding: 8px;
+    `,
+    option: css`
+      height: 24px;
+    `,
+    optionModalShow: css`
+      display: block;
+    `,
+    optionModalHide: css`
+      display: none;
+    `,
+    optionModal: css`
+      background-color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: end;
+      gap: 4px;
+      padding: 8px;
+      border: 1px solid #888888;
+      border-radius: 4px;
+      position: absolute;
+      top: 32px;
+      right: 8px;
+
+      p {
+        padding: 2px;
+      }
+    `,
   };
+
+  const [showOptionModal, setOptionModal] = useState(false)
+  const [showRemoveModal, setRemoveModal] = useState(false)
+
+  const onRemoveCollection = (e: React.MouseEvent<HTMLParagraphElement>) => {
+    e.preventDefault()
+    setRemoveModal(true)
+  }
+
+  const openOption = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setOptionModal(!showOptionModal)
+  }
+
+  const onCloseRemoveModal = () => {
+    refetchParent?.()
+    setRemoveModal(false)
+    setOptionModal(false)
+  }
 
   const formatDuration = (duration: number) => {
     const hour = Math.floor(duration / 60)
@@ -171,45 +229,81 @@ function AnimeCard({ data, isLoading }: AnimeCardProps) {
   }
 
   return (
-    <div css={animeCardCss.wrapper}>
-      {isLoading ?
-        renderSkeleton()
-        : <>
-          <div css={animeCardCss.image}>
+    <>
+      <Link to={routes} css={animeCardCss.wrapper}>
+        {isLoading ?
+          renderSkeleton()
+          : <>
+            <div css={animeCardCss.image}>
+              <img
+                src={data.image}
+                alt={`${data.title?.romaji} cover`}
+              />
+            </div>
+            <div css={animeCardCss.infoWrapper}>
+              <div>
+                <p css={animeCardCss.titleRomaji}>
+                  {data.title?.romaji}
+                </p>
+                <p css={animeCardCss.titleNative}>
+                  {data.title?.native}
+                </p>
+              </div>
+              <div>
+                <div css={animeCardCss.typesWrapper}>
+                  <p css={animeCardCss.format}>
+                    {data.format}
+                  </p>
+                  {renderEpisodesOrDuration()}
+                </div>
+                {renderGenres()}
+              </div>
+            </div>
+          </>
+        }
+        {option
+          ? <>
+            <div
+              css={animeCardCss.optionWrapper}
+              onClick={openOption}
+            >
+              <img
+                css={animeCardCss.option}
+                src="https://s6.imgcdn.dev/xpbBn.png"
+                alt="more option"
+              />
+            </div>
+            <div
+              css={[
+                showOptionModal ? animeCardCss.optionModalShow : animeCardCss.optionModalHide
+              ]}
+              onClick={(e) => e.preventDefault()}
+            >
+              <div css={animeCardCss.optionModal}>
+                <p onClick={onRemoveCollection}>remove</p>
+              </div>
+            </div>
+          </>
+          : <div css={animeCardCss.arrowRightWrapper}>
             <img
-              src={data.image}
-              alt={`${data.title?.romaji} cover`}
+              css={animeCardCss.arrowRight}
+              src="https://s6.imgcdn.dev/xgJYi.png"
+              alt="arrow right"
             />
           </div>
-          <div css={animeCardCss.infoWrapper}>
-            <div>
-              <p css={animeCardCss.titleRomaji}>
-                {data.title?.romaji}
-              </p>
-              <p css={animeCardCss.titleNative}>
-                {data.title?.native}
-              </p>
-            </div>
-            <div>
-              <div css={animeCardCss.typesWrapper}>
-                <p css={animeCardCss.format}>
-                  {data.format}
-                </p>
-                {renderEpisodesOrDuration()}
-              </div>
-              {renderGenres()}
-            </div>
-          </div>
-        </>
-      }
-      <div css={animeCardCss.arrowRightWrapper}>
-        <img
-          css={animeCardCss.arrowRight}
-          src="https://s6.imgcdn.dev/xgJYi.png"
-          alt="arrow right"
+        }
+      </Link>
+      {!option?.collectionId
+        ? null
+        : <ModalRemoveAnime
+          isShowModal={showRemoveModal}
+          animeId={JSON.stringify(data.id)}
+          collectionId={option.collectionId}
+          onCloseModal={onCloseRemoveModal}
         />
-      </div>
-    </div>
+
+      }
+    </>
   )
 }
 

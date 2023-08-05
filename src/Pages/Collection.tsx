@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { css } from '@emotion/react';
-import { Link } from 'react-router-dom';
 import { useLazyQuery } from '@apollo/client';
 import { LOAD_ANIME_LIST_BANNER } from '../GraphQL/Queries';
 import CollectionCard from '../Components/CollectionCard';
@@ -16,16 +15,28 @@ interface collectionType {
 }
 
 function Collection() {
-  const CollectionCss = {
+  const collectionCss = {
     wrapper: css`
       min-height: 100vh;
       background-color: whitesmoke;
       padding: 16px;
-    `,
-    collectionListWrapper: css`
       display: flex;
       flex-direction: column;
       gap: 8px;
+    `,
+    addNewWrapper: css`
+      width: 100%;
+      display: flex;
+    `,
+    iconWrapper: css`
+      margin-left: 4px;
+      padding: 4px;
+      border: 1px solid lightgray;
+      border-radius: 4px;
+    `,
+    icon: css`
+      width: 12px;
+      height: 12px;
     `,
   }
 
@@ -34,6 +45,8 @@ function Collection() {
 
   const [animeList, setAnimeList] = useState([{ id: 0, coverImage: { medium: '' } }])
   const [paramSearch, setParamSearch]: [number[], React.Dispatch<React.SetStateAction<number[]>>] = useState([0])
+
+  const [newCollection, setNewCollection] = useState('')
 
   const [getAnimeList, { loading, data }] = useLazyQuery(LOAD_ANIME_LIST_BANNER);
 
@@ -62,6 +75,17 @@ function Collection() {
     }
   }, [data])
 
+  const addNewCollection = () => {
+    localStorage.setItem('collections', JSON.stringify(
+      {
+        ...lsCollectionsData,
+        [newCollection]: {},
+      }
+    ))
+    setLsUpdated(true)
+    setNewCollection('')
+  }
+
   const renderCollectionList = () => {
     return Object.keys(lsCollectionsData).map((collection, idx) => {
 
@@ -76,28 +100,41 @@ function Collection() {
         }
       })
 
-      const routes = 'detail/' + collection
-
       return (
-        <Link key={idx} to={routes}>
-          <CollectionCard
-            data={{
-              id,
-              image,
-              title: collection,
-            }}
-            isLoading={loading}
-          />
-        </Link>
+        <CollectionCard
+          key={idx}
+          data={{
+            id,
+            image,
+            title: collection,
+          }}
+          isLoading={loading}
+          refetchParent={() => setLsUpdated(true)}
+        />
       )
     })
   }
 
   return (
-    <div css={CollectionCss.wrapper}>
-      <div css={CollectionCss.collectionListWrapper}>
-        {renderCollectionList()}
+    <div css={collectionCss.wrapper}>
+      <div css={collectionCss.addNewWrapper}>
+        <input
+          type="text"
+          placeholder='New Collection'
+          value={newCollection}
+          onChange={(e) => setNewCollection(e.target.value)}
+        />
+        {!newCollection ? null :
+          <div css={collectionCss.iconWrapper} onClick={addNewCollection}>
+            <img
+              css={collectionCss.icon}
+              src="https://s6.imgcdn.dev/x85xC.png"
+              alt="check icon"
+            />
+          </div>
+        }
       </div>
+      {renderCollectionList()}
     </div>
   );
 }
