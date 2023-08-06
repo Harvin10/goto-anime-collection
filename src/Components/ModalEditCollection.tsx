@@ -60,6 +60,7 @@ function ModalEditCollection({ isShowModal, collectionId, onCloseModal }: ModalE
 
     localStorage.setItem('collections', JSON.stringify(collectionList))
     localStorage.setItem('animes', JSON.stringify(animeList))
+    setNewCollectionName('')
     onCloseModal()
   }
 
