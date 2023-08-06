@@ -132,6 +132,7 @@ function ModalCollectionList({ isShowModal, animeId, onCloseModal }: ModalCollec
         <div key={idx}>
           <input
             type="checkbox"
+            id={name}
             name={name}
             value={name}
             checked={selectedCollection?.[name] || false}
