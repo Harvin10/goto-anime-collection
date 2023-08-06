@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/goto-anime-collection/static/js/main.448035d3.js",
+    "main.js": "/goto-anime-collection/static/js/main.feefcb13.js",
     "index.html": "/goto-anime-collection/index.html",
-    "main.448035d3.js.map": "/goto-anime-collection/static/js/main.448035d3.js.map"
+    "main.feefcb13.js.map": "/goto-anime-collection/static/js/main.feefcb13.js.map"
   },
   "entrypoints": [
-    "static/js/main.448035d3.js"
+    "static/js/main.feefcb13.js"
   ]
 }
