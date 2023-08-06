@@ -27,7 +27,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test --coverage",
     "eject": "react-scripts eject",
-    "codegen": "graphql-codegen -r dotenv/config"
+    "codegen": "graphql-codegen -r dotenv/config",
+    "predeploy" : "npm run build",
+    "deploy" : "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +52,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^5.0.0",
     "@graphql-codegen/client-preset": "^4.1.0",
+    "gh-pages": "^5.0.0",
     "typescript": "^5.1.6"
   }
 }
