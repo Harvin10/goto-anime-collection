@@ -29,6 +29,16 @@ function ModalCollectionList({ isShowModal, animeId, onCloseModal }: ModalCollec
       width: 100%;
       display: flex;
     `,
+    errorMessage: css`
+      color: red;
+      font-size: 12px;
+      margin-top: 4px;
+
+      li {
+        list-style: disc;
+        list-style-position: inside;
+      }
+    `,
     iconWrapper: css`
       margin-left: 4px;
       padding: 4px;
@@ -53,6 +63,8 @@ function ModalCollectionList({ isShowModal, animeId, onCloseModal }: ModalCollec
   const [isLsUpdated, setLsUpdated] = useState(false)
 
   const [newCollection, setNewCollection] = useState('')
+  const [isValid, setValid] = useState(false)
+  const [isDirty, setDirty] = useState(false)
   const [selectedCollection, setSelectedCollection]: [collectionType, React.Dispatch<React.SetStateAction<{}>>] = useState({})
 
   useEffect(() => {
@@ -103,6 +115,17 @@ function ModalCollectionList({ isShowModal, animeId, onCloseModal }: ModalCollec
     setSelectedCollection(newSelected)
   }
 
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDirty(true)
+    setNewCollection(e.target.value)
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (!lsCollectionsData?.[e.target.value] && !specialChars.test(e.target.value)) {
+      setValid(true)
+    } else {
+      setValid(false)
+    }
+  }
+
   const renderCollectionList = () => {
     return Object.keys(lsCollectionsData).map((name: string, idx) => {
       return (
@@ -131,13 +154,24 @@ function ModalCollectionList({ isShowModal, animeId, onCloseModal }: ModalCollec
       <div css={modalContentCss.wrapper}>
         {renderCollectionList()}
         <div css={modalContentCss.addNewWrapper}>
-          <input
-            type="text"
-            placeholder='New Collection'
-            value={newCollection}
-            onChange={(e) => setNewCollection(e.target.value)}
-          />
-          {!newCollection ? null :
+          <div>
+            <input
+              type="text"
+              placeholder='New Collection'
+              value={newCollection}
+              onChange={onInputChange}
+            />
+            {isValid || !isDirty ? null :
+              <div css={modalContentCss.errorMessage}>
+                <p>Collection name can't: </p>
+                <ul>
+                  <li>Use special character</li>
+                  <li>Have duplicate</li>
+                </ul>
+              </div>
+            }
+          </div>
+          {!newCollection || !isValid ? null :
             <div css={modalContentCss.iconWrapper} onClick={addNewCollection}>
               <img
                 css={modalContentCss.icon}

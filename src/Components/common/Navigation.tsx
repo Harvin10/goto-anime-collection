@@ -10,7 +10,7 @@ function Navigation() {
       margin-bottom: 44px;
     `,
     navigationWrapper: css`
-      background-color: gray;
+      background-color: black;
       width: 100%;
       display: flex;
       justify-content: space-around;
@@ -21,9 +21,10 @@ function Navigation() {
     `,
     link: css`
       padding: 4px 8px;
+      color: white;
     `,
     current: css`
-      color: blue;
+      color: lightblue;
     `,
   };
 

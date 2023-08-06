@@ -66,6 +66,7 @@ function Home() {
 
       return (
         <AnimeCard
+          key={idx}
           data={{
             id,
             episodes,

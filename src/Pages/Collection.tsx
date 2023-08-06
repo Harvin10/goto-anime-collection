@@ -28,6 +28,16 @@ function Collection() {
       width: 100%;
       display: flex;
     `,
+    errorMessage: css`
+      color: red;
+      font-size: 12px;
+      margin-top: 4px;
+
+      li {
+        list-style: disc;
+        list-style-position: inside;
+      }
+    `,
     iconWrapper: css`
       margin-left: 4px;
       padding: 4px;
@@ -47,6 +57,8 @@ function Collection() {
   const [paramSearch, setParamSearch]: [number[], React.Dispatch<React.SetStateAction<number[]>>] = useState([0])
 
   const [newCollection, setNewCollection] = useState('')
+  const [isValid, setValid] = useState(false)
+  const [isDirty, setDirty] = useState(false)
 
   const [getAnimeList, { loading, data }] = useLazyQuery(LOAD_ANIME_LIST_BANNER);
 
@@ -86,6 +98,17 @@ function Collection() {
     setNewCollection('')
   }
 
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDirty(true)
+    setNewCollection(e.target.value)
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (!lsCollectionsData?.[e.target.value] && !specialChars.test(e.target.value)) {
+      setValid(true)
+    } else {
+      setValid(false)
+    }
+  }
+
   const renderCollectionList = () => {
     return Object.keys(lsCollectionsData).map((collection, idx) => {
 
@@ -118,13 +141,24 @@ function Collection() {
   return (
     <div css={collectionCss.wrapper}>
       <div css={collectionCss.addNewWrapper}>
-        <input
-          type="text"
-          placeholder='New Collection'
-          value={newCollection}
-          onChange={(e) => setNewCollection(e.target.value)}
-        />
-        {!newCollection ? null :
+        <div>
+          <input
+            type="text"
+            placeholder='New Collection'
+            value={newCollection}
+            onChange={onInputChange}
+          />
+          {isValid || !isDirty ? null :
+            <div css={collectionCss.errorMessage}>
+              <p>Collection name can't: </p>
+              <ul>
+                <li>Use special character</li>
+                <li>Have duplicate</li>
+              </ul>
+            </div>
+          }
+        </div>
+        {!newCollection || !isValid ? null :
           <div css={collectionCss.iconWrapper} onClick={addNewCollection}>
             <img
               css={collectionCss.icon}
