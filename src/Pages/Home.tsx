@@ -6,6 +6,7 @@ import { LOAD_ANIME_LIST } from '../GraphQL/Queries';
 import { css } from '@emotion/react';
 import AnimeCard from '../Components/AnimeCard';
 import Pagination from '../Components/common/Pagination';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 function Home() {
   const homeCss = {
@@ -26,9 +27,11 @@ function Home() {
     `,
   }
 
+  let [searchParams, setSearchParams] = useSearchParams();
+
   const [animeList, setAnimeList] = useState(new Array(5).fill(''))
   const [paginationInfo, setPaginationInfo] = useState(0)
-  const [currPage, setCurrPage] = useState(1)
+  const [currPage, setCurrPage] = useState(parseInt(searchParams.get('page') || '1'))
 
   const { loading, data, refetch } = useQuery(LOAD_ANIME_LIST, {
     variables: {
@@ -50,6 +53,13 @@ function Home() {
     }
   }, [currPage, refetch])
 
+  const updatePaginationPage = (page: number) => {
+    setSearchParams({
+      page: `${page}`
+    })
+    setCurrPage(page)
+  }
+
   const renderAnimeList = () => {
     return animeList.map((anime, idx) => {
       const {
@@ -62,7 +72,7 @@ function Home() {
         title
       } = anime;
 
-      const routes = 'detail/' + id
+      const routes = '/detail/' + id
 
       return (
         <AnimeCard
@@ -93,7 +103,7 @@ function Home() {
           <Pagination
             currentPage={currPage}
             lastPage={paginationInfo}
-            onChangePage={setCurrPage}
+            onChangePage={updatePaginationPage}
           />
         </div>
         : null}

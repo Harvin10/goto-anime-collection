@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 import {
   ApolloClient,
   ApolloProvider,
@@ -55,7 +55,11 @@ function App() {
       <ApolloProvider client={client}>
         <Navigation />
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route
+            path="/"
+            element={<Navigate to="/home" replace />}
+          />
+          <Route path='/home' element={<Home />} />
           <Route path='/detail/:id' element={<Detail />} />
           <Route path='/collection' element={<Collection />} />
           <Route path='/collection/detail/:id' element={<CollectionDetail />} />

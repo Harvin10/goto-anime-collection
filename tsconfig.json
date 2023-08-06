@@ -23,6 +23,6 @@
   },
   "include": [
     "src",
-    "test/pages/Home.test.tsx"
+    "test/Pages/Home.test.tsx"
 , "test/App.test.tsx"  ]
 }

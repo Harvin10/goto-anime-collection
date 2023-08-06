@@ -34,10 +34,10 @@ function Navigation() {
     <div css={navigationCss.wrapper}>
       <div css={navigationCss.navigationWrapper}>
         <Link
-          to='/'
+          to='/home'
           css={[
             navigationCss.link,
-            pathname === '/' ? navigationCss.current : ''
+            pathname === '/home' ? navigationCss.current : ''
           ]}
         >Home
         </Link>

@@ -128,7 +128,7 @@ function CollectionCard({ data, isLoading, refetchParent }: CollectionCardProps)
     )
   }
 
-  const routes = 'detail/' + data.title
+  const routes = '/detail/' + data.title
 
   return (
     <>
