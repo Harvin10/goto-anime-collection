@@ -25,12 +25,23 @@ function ModalEditCollection({ isShowModal, collectionId, onCloseModal }: ModalE
       flex-direction: column;
       gap: 8px;
     `,
+    errorMessage: css`
+      color: red;
+      font-size: 12px;
+      margin-top: 4px;
+
+      li {
+        list-style: disc;
+        list-style-position: inside;
+      }
+    `,
   }
 
   const [lsCollectionsData, setLsCollectionsData]: [localStorageType, React.Dispatch<React.SetStateAction<{}>>] = useState({})
   const [lsAnimesData, setLsAnimesData]: [localStorageType, React.Dispatch<React.SetStateAction<{}>>] = useState({})
 
   const [newCollectionName, setNewCollectionName] = useState('')
+  const [isValid, setValid] = useState(false)
 
   useEffect(() => {
     setLsCollectionsData(JSON.parse(localStorage.getItem('collections') || "{}"))
@@ -52,6 +63,16 @@ function ModalEditCollection({ isShowModal, collectionId, onCloseModal }: ModalE
     onCloseModal()
   }
 
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewCollectionName(e.target.value)
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    if (!lsCollectionsData?.[e.target.value] && !specialChars.test(e.target.value)) {
+      setValid(true)
+    } else {
+      setValid(false)
+    }
+  }
+
   return (
     <ModalOverlay
       isShowModal={isShowModal}
@@ -59,12 +80,24 @@ function ModalEditCollection({ isShowModal, collectionId, onCloseModal }: ModalE
       onCloseModal={onCloseModal}
     >
       <div css={modalContentCss.wrapper}>
-        <input
-          type="text"
-          value={newCollectionName}
-          onChange={e => setNewCollectionName(e.target.value)}
-        />
-        <button onClick={onEditCollection}>edit</button>
+        <div>
+          <input
+            type="text"
+            placeholder='New Collection'
+            value={newCollectionName}
+            onChange={onInputChange}
+          />
+          {isValid ? null :
+            <div css={modalContentCss.errorMessage}>
+              <p>Collection name can't: </p>
+              <ul>
+                <li>Use special character</li>
+                <li>Have duplicate</li>
+              </ul>
+            </div>
+          }
+        </div>
+        <button onClick={onEditCollection} disabled={!!newCollectionName && isValid}>edit</button>
       </div>
     </ModalOverlay>
   )
