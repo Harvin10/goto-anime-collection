@@ -97,7 +97,7 @@ function ModalEditCollection({ isShowModal, collectionId, onCloseModal }: ModalE
             </div>
           }
         </div>
-        <button onClick={onEditCollection} disabled={!!newCollectionName && isValid}>edit</button>
+        <button onClick={onEditCollection} disabled={!newCollectionName || !isValid}>edit</button>
       </div>
     </ModalOverlay>
   )
